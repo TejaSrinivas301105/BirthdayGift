@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Environment variables — NEVER commit these
+.env
+.env.local
+.env.production
+backend/.env
+frontend/.env
+
+# Build outputs
+frontend/dist/
+.dist/
+
+# Uploads (local fallback files)
+backend/uploads/
+backend/data/mockDb.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*

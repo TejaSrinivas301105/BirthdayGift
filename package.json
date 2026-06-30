@@ -1,0 +1,13 @@
+{
+  "name": "asrithas-world-root",
+  "version": "1.0.0",
+  "description": "Asritha's World MERN Birthday Surprise Root Directory",
+  "scripts": {
+    "install-backend": "cd backend && npm install",
+    "install-frontend": "cd frontend && npm install",
+    "install-all": "npm run install-backend && npm run install-frontend",
+    "server": "cd backend && npm start",
+    "client": "cd frontend && npm run dev",
+    "dev": "npx concurrently \"npm run server\" \"npm run client\""
+  }
+}
