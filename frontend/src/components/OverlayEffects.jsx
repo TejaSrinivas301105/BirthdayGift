@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../context/AppContext';
+import { useMusic } from '../context/MusicContext';
 
 const OverlayEffects = () => {
   const { snowActive, fireworksActive, lanternsActive, setFireworksActive } = useApp();
+  const { stopSpecial } = useMusic();
   const canvasRef = useRef(null);
 
   // Use refs so the animation loop reads live values without re-mounting
@@ -247,8 +249,9 @@ const OverlayEffects = () => {
     };
   }, []); // Empty deps — runs once, reads live values via refs
 
-const scrollToBirthday = () => {
+  const scrollToBirthday = () => {
     setFireworksActive(false);
+    stopSpecial();
     setTimeout(() => {
       const el = document.querySelector('[data-birthday-section]');
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });

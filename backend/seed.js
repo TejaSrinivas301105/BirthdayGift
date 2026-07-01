@@ -7,9 +7,9 @@ const seed = async () => {
   console.log('Connected to MongoDB Atlas');
 
   await User.deleteMany({});
-  await User.create({ email: 'vts.srinivas2005@gmail.com', password: 'asritha123' });
+  await User.create({ email: 'asrithasai27@gmail.com', password: 'asritha123' });
 
-  console.log('✅ User seeded: vts.srinivas2005@gmail.com / asritha123');
+  // console.log('✅ User seeded: vts.srinivas2005@gmail.com / asritha123');
   process.exit(0);
 };
 

@@ -15,7 +15,7 @@ const initMockDb = () => {
       users: [
         {
           _id: 'mock-user-1',
-          email: 'vts.srinivas2005@gmail.com',
+          email: 'asrithasai27@gmail.com',
           password: defaultPasswordHash,
           otp: null,
           otpExpires: null,

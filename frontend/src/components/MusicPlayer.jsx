@@ -7,7 +7,7 @@ const BAR_HEIGHTS = [10, 14, 8, 12];
 const BAR_DELAYS  = ['0s', '0.15s', '0.3s', '0.1s'];
 
 const MusicPlayer = () => {
-  const { isPlaying, togglePlay, volume, adjustVolume, isMuted, toggleMute } = useMusic();
+  const { isPlaying, togglePlay, volume, adjustVolume, isMuted, toggleMute, currentTrackName } = useMusic();
   const [showVolume, setShowVolume] = useState(false);
 
   return (
@@ -65,7 +65,7 @@ const MusicPlayer = () => {
       </div>
       
       <span className="text-[10px] text-white/50 font-medium tracking-wide uppercase max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-out whitespace-nowrap">
-        {isPlaying ? "Asritha's Theme" : "Play Theme"}
+        {isPlaying ? currentTrackName : 'Play Theme'}
       </span>
     </div>
   );

@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { MusicProvider, useMusic } from './context/MusicContext';
@@ -25,7 +25,13 @@ const ProtectedRoute = ({ children }) => {
 
 const MainLayout = () => {
   const navigate = useNavigate();
-  const { playMusic } = useMusic();
+  const location = useLocation();
+  const { playMusic, changeTrack } = useMusic();
+
+  // Switch track whenever route changes
+  useEffect(() => {
+    changeTrack(location.pathname);
+  }, [location.pathname]);
 
   const handleWelcomeProceed = () => {
     playMusic();

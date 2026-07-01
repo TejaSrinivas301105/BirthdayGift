@@ -31,7 +31,7 @@ if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && proce
   const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-      folder: 'asrithas_world',
+      folder: "Asritha's memories",
       allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'webp'],
     },
   });

@@ -411,7 +411,7 @@ const WelcomeScreen = ({ onProceed }) => {
                 onClick={handleButtonClick}
                 className="px-8 py-3.5 bg-gradient-to-r from-purple-600 via-pink-500 to-amber-500 text-white font-bold rounded-full shadow-lg shadow-pink-500/35 border border-white/20 tracking-wider text-sm md:text-base cursor-pointer"
               >
-                Yes, I Like This Surprise 💖
+                Are you excited for the surprise 💖
               </motion.button>
             )}
           </AnimatePresence>

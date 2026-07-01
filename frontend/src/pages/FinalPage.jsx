@@ -82,7 +82,7 @@ const FinalPage = ({ onRestart }) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     let animationId;
 
     const resize = () => {
@@ -96,19 +96,18 @@ const FinalPage = ({ onRestart }) => {
     const textTargets = [];
     const getTargets = () => {
       const hiddenCanvas = document.createElement('canvas');
-      const hctx = hiddenCanvas.getContext('2d');
+      const hctx = hiddenCanvas.getContext('2d', { willReadFrequently: true });
       hiddenCanvas.width = window.innerWidth;
       hiddenCanvas.height = window.innerHeight;
 
       hctx.fillStyle = '#ffffff';
       hctx.textAlign = 'center';
       hctx.textBaseline = 'middle';
-      
-      const fontSize = Math.min(hiddenCanvas.width * 0.065, 50);
-      hctx.font = `bold ${fontSize}px sans-serif`;
-      
-      // Draw text
-      hctx.fillText('Made With ❤️ By Teja', hiddenCanvas.width / 2, hiddenCanvas.height / 2);
+
+      const fontSize = Math.min(hiddenCanvas.width * 0.055, 52);
+      hctx.font = `900 ${fontSize}px Arial Black, sans-serif`;
+
+      hctx.fillText('Made With ❤️ By Your Friends', hiddenCanvas.width / 2, hiddenCanvas.height / 2);
 
       const imgData = hctx.getImageData(0, 0, hiddenCanvas.width, hiddenCanvas.height);
       const stepSize = Math.max(3, Math.floor(hiddenCanvas.width / 450)); // fine resolution
@@ -168,17 +167,9 @@ const FinalPage = ({ onRestart }) => {
 
       draw() {
         ctx.save();
+        // Crisp solid core — no glow halo to avoid blur
         ctx.globalAlpha = Math.max(0, this.alpha);
-
-        // Soft glow halo — no shadowBlur (GPU-friendly)
-        ctx.globalAlpha = Math.max(0, this.alpha * 0.3);
         ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Bright solid core
-        ctx.globalAlpha = Math.max(0, this.alpha);
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -193,7 +184,7 @@ const FinalPage = ({ onRestart }) => {
     let startTime = Date.now();
 
     const draw = () => {
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.15)'; // Slate-950 trail
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.3)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const elapsed = Date.now() - startTime;

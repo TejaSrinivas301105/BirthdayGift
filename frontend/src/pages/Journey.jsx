@@ -3,7 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import BirthdayCake3D from '../components/BirthdayCake3D';
 import { useApp } from '../context/AppContext';
-import { Heart, Sparkles, Navigation, Calendar, CloudSnow, Flame, Compass, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import { useMusic } from '../context/MusicContext';
+import { Heart, Sparkles, Navigation, Calendar, CloudSnow, Flame, Compass, ChevronLeft, ChevronRight, Pause, Play, Image } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const timelineData = [
   {
@@ -31,14 +33,14 @@ const timelineData = [
     step: 4,
     title: "The Smiles You Gave",
     description: "Whenever things got heavy, your smile and cheerful energy acted as a bright beacon of sunshine. Thank you for lighting up my world with your beautiful laugh.",
-    image: "https://res.cloudinary.com/dyqeqadm5/image/upload/w_800,h_600,c_fill,q_auto,f_auto/asrithas_world/journey-smiles-you-gave.jpg",
+    image: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874003/WhatsApp_Image_2026-07-01_at_8.10.49_AM_2_svjoix.jpg",
     date: "Warmth & Joy"
   },
   {
     step: 5,
     title: "The Moments We Will Keep Forever",
     description: "No matter where life takes us, or how busy we get, these precious moments of genuine friendship will remain locked in my heart, forever cherished and protected.",
-    image: "https://res.cloudinary.com/dyqeqadm5/image/upload/w_800,h_600,c_fill,q_auto,f_auto/asrithas_world/journey-moments-forever.jpg",
+    image: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874005/WhatsApp_Image_2026-07-01_at_8.10.50_AM_zjp6ux.jpg",
     date: "Forever & Always"
   }
 ];
@@ -46,30 +48,63 @@ const timelineData = [
 // All friendship memory photos for the slideshow
 const friendshipPhotos = [
   {
-    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782819171/journey-day-we-met.jpg.jpg",
+    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874003/WhatsApp_Image_2026-07-01_at_8.10.49_AM_2_svjoix.jpg",
     caption: "The Day We Met",
     sub: "A Beautiful Day"
   },
   {
-    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782819172/WhatsApp_Image_2026-06-30_at_4.58.58_PM_1_olktgz.jpg",
+    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874004/WhatsApp_Image_2026-07-01_at_8.10.52_AM_bidskb.jpg",
     caption: "The Day We Became Friends",
     sub: "The Magic Connection"
   },
   {
-    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782819180/WhatsApp_Image_2026-06-30_at_4.58.58_PM_of2cmg.jpg",
+    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874002/WhatsApp_Image_2026-07-01_at_8.10.49_AM_1_m7kae2.jpg",
     caption: "The Memories We Created",
     sub: "Infinite Laughs"
   },
   {
-    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/w_800,h_600,c_fill,q_auto,f_auto/asrithas_world/journey-smiles-you-gave.jpg",
+    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874003/WhatsApp_Image_2026-07-01_at_8.10.51_AM_ulrwhk.jpg",
     caption: "The Smiles You Gave",
-    sub: "Warmth & Joy"
+    sub: "Warmth & Joy",
+    objectFit: "contain",
+    objectPosition: "center"
   },
   {
-    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/w_800,h_600,c_fill,q_auto,f_auto/asrithas_world/journey-moments-forever.jpg",
+    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874002/WhatsApp_Image_2026-07-01_at_8.10.51_AM_2_ujtwel.jpg",
     caption: "The Moments We Will Keep Forever",
     sub: "Forever & Always"
-  }
+  },
+  {
+    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874005/WhatsApp_Image_2026-07-01_at_8.10.50_AM_zjp6ux.jpg",
+    caption: "Side by Side or Miles Apart",
+    sub: "Always Together"
+  },
+  {
+    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782925595/Friend_phot_yarfj1.jpg",
+    caption: "Friends Who Laugh Together, Stay Together",
+    sub: "Pure Joy & Chaos",
+    objectFit: "contain",
+    objectPosition: "center"
+  },
+  {
+    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874004/WhatsApp_Image_2026-07-01_at_8.10.51_AM_1_jvzd6a.jpg",
+    caption: "You Make Every Moment Brighter",
+    sub: "Golden Memories",
+    objectFit: "contain",
+    objectPosition: "center"
+  },
+  {
+    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874004/WhatsApp_Image_2026-07-01_at_8.10.49_AM_kmhxx7.jpg",
+    caption: "A Friend Like You Is Hard to Find",
+    sub: "One in a Million"
+  },
+  {
+    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874002/WhatsApp_Image_2026-07-01_at_8.10.48_AM_1_g15bjo.jpg",
+    caption: "Here's to All the Memories We've Made",
+    sub: "Cherished Forever",
+    objectFit: "contain"
+  },
+
 ];
 
 const FriendshipSlideshow = () => {
@@ -110,7 +145,8 @@ const FriendshipSlideshow = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.97 }}
             transition={{ duration: 0.9, ease: 'easeInOut' }}
-            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectFit: friendshipPhotos[current].objectFit || 'cover', objectPosition: friendshipPhotos[current].objectPosition || 'center top' }}
+            className="absolute inset-0 w-full h-full"
           />
         </AnimatePresence>
 
@@ -194,6 +230,8 @@ const Journey = ({ onNext }) => {
     fireworksActive, setFireworksActive, 
     lanternsActive, setLanternsActive 
   } = useApp();
+  const { playSpecial, stopSpecial } = useMusic();
+  const navigate = useNavigate();
 
   // Scroll to top when view changes
   useEffect(() => {
@@ -228,6 +266,19 @@ const Journey = ({ onNext }) => {
       {/* Aurora glow backdrops */}
       <div className="absolute top-20 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-[60vh] right-1/4 w-96 h-96 bg-pink-600/10 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Skip to Memory Album button — top right */}
+      <motion.button
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        whileHover={{ scale: 1.05, boxShadow: '0 0 18px rgba(236,72,153,0.4)' }}
+        whileTap={{ scale: 0.96 }}
+        onClick={() => navigate('/album')}
+        className="fixed top-6 left-6 z-50 flex items-center gap-2 px-4 py-2 bg-slate-900/70 border border-pink-500/40 text-pink-300 text-xs font-bold rounded-full backdrop-blur-md hover:border-pink-500 hover:text-white transition-all duration-300 cursor-pointer shadow-lg"
+      >
+        <Image size={13} /> Skip to Memory Album 💖
+      </motion.button>
 
       {/* Hero header */}
       <div className="max-w-4xl mx-auto text-center pt-28 pb-12 px-6">
@@ -396,8 +447,14 @@ const Journey = ({ onNext }) => {
 
             <button
               onClick={() => {
-                setFireworksActive(!fireworksActive);
-                if (!fireworksActive) setSnowActive(false); // Disable snow when fireworks are active for visual clarity
+                const next = !fireworksActive;
+                setFireworksActive(next);
+                if (next) {
+                  setSnowActive(false);
+                  playSpecial();
+                } else {
+                  stopSpecial();
+                }
               }}
               className={`p-3 rounded-xl border flex flex-col items-center gap-1.5 cursor-pointer transition-all duration-300 text-xs font-semibold ${
                 fireworksActive 

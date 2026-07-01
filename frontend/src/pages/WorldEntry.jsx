@@ -25,7 +25,7 @@ const WorldEntry = ({ onComplete }) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     let animationId;
 
     const resize = () => {
@@ -39,22 +39,21 @@ const WorldEntry = ({ onComplete }) => {
     const textTargets = [];
     const getTargets = () => {
       const hiddenCanvas = document.createElement('canvas');
-      const hctx = hiddenCanvas.getContext('2d');
+      const hctx = hiddenCanvas.getContext('2d', { willReadFrequently: true });
       hiddenCanvas.width = window.innerWidth;
       hiddenCanvas.height = window.innerHeight;
 
       hctx.fillStyle = '#ffffff';
       hctx.textAlign = 'center';
       hctx.textBaseline = 'middle';
-      
-      // Choose font size based on screen width
-      const fontSize = Math.min(hiddenCanvas.width * 0.12, 120);
-      hctx.font = `black ${fontSize}px sans-serif`;
+
+      const fontSize = Math.min(hiddenCanvas.width * 0.14, 140);
+      hctx.font = `900 ${fontSize}px Arial Black, sans-serif`;
       hctx.fillText('ASRITHA', hiddenCanvas.width / 2, hiddenCanvas.height / 2);
 
       // Scan canvas pixels
       const imgData = hctx.getImageData(0, 0, hiddenCanvas.width, hiddenCanvas.height);
-      const stepSize = Math.max(4, Math.floor(hiddenCanvas.width / 350)); // Scale resolution
+      const stepSize = Math.max(3, Math.floor(hiddenCanvas.width / 400));
 
       for (let y = 0; y < hiddenCanvas.height; y += stepSize) {
         for (let x = 0; x < hiddenCanvas.width; x += stepSize) {
@@ -66,7 +65,7 @@ const WorldEntry = ({ onComplete }) => {
         }
       }
     };
-    
+
     getTargets();
 
     // 2. Initialize Particles
@@ -133,21 +132,13 @@ const WorldEntry = ({ onComplete }) => {
       }
 
       draw() {
-        // Size scales based on depth if zooming
-        const sizeVal = step === 0 ? this.size * (1 - this.z / canvas.width) * 1.5 : this.size;
-        const r = Math.max(0.5, sizeVal);
-        const glowR = r * (step >= 2 ? 3.5 : 2);
+        const sizeVal = step === 0 ? this.size * (1 - this.z / canvas.width) * 2 : this.size;
+        const r = Math.max(0.8, sizeVal);
 
-        // Soft outer glow using globalAlpha — no ctx.shadowBlur (GPU-friendly)
         ctx.save();
-        ctx.globalAlpha = 0.25;
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, glowR, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Bright solid core
+        // Crisp solid bright core — no blur, no glow halo
         ctx.globalAlpha = 1;
+        ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, r, 0, Math.PI * 2);
         ctx.fill();
@@ -161,7 +152,8 @@ const WorldEntry = ({ onComplete }) => {
 
     // Animation Loop
     const draw = () => {
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.2)'; // Clear with trailing smear
+      // Lower trail opacity = crisper particles, less blur smear
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.35)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach(p => {

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, Key, ShieldCheck, Eye, EyeOff, Sparkles } from 'lucide-react';
+import { Mail, Lock, Key, ShieldCheck, Eye, EyeOff, Sparkles, Gift } from 'lucide-react';
 
 const LoginScreen = ({ onLoginSuccess }) => {
   const { login, sendOtp, verifyOtp, resetPassword } = useAuth();
@@ -22,6 +22,8 @@ const LoginScreen = ({ onLoginSuccess }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [modalError, setModalError] = useState('');
   const [modalLoading, setModalLoading] = useState(false);
+
+  const [showGift, setShowGift] = useState(false);
 
   const otpInputsRef = useRef([]);
 
@@ -195,6 +197,52 @@ const LoginScreen = ({ onLoginSuccess }) => {
             }}
           />
         ))}
+      </div>
+
+      {/* Gift box hint — floats on left side */}
+      <div className="absolute left-6 bottom-10 z-20 flex flex-col items-center gap-2">
+        <motion.button
+          onClick={() => setShowGift(p => !p)}
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          className="text-5xl cursor-pointer select-none drop-shadow-[0_0_12px_rgba(236,72,153,0.6)]"
+        >
+          🎁
+        </motion.button>
+        <span className="text-[10px] text-pink-400/70 font-semibold tracking-widest uppercase animate-pulse">
+          {showGift ? 'Hide Hint' : 'Hint?'}
+        </span>
+
+        <AnimatePresence>
+          {showGift && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+              className="mt-1 w-52 bg-slate-900/90 border border-pink-500/30 rounded-2xl p-4 backdrop-blur-xl shadow-xl shadow-pink-500/10"
+            >
+              <p className="text-[10px] uppercase tracking-[0.25em] text-pink-400 font-bold mb-3 text-center">
+                🔑 Login Credentials
+              </p>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2 bg-slate-800/60 rounded-xl px-3 py-2 border border-white/5">
+                  <Mail size={12} className="text-purple-400 shrink-0" />
+                  <span className="text-white/80 text-xs font-mono truncate">asrithasai27<br/>@gmail.com</span>
+                </div>
+                <div className="flex items-center gap-2 bg-slate-800/60 rounded-xl px-3 py-2 border border-white/5">
+                  <Lock size={12} className="text-pink-400 shrink-0" />
+                  <span className="text-white/80 text-xs font-mono">asritha123</span>
+                </div>
+              </div>
+              <p className="text-[9px] text-white/30 text-center mt-3 font-light">
+                Click the gift to hide 💖
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Main glass card */}
