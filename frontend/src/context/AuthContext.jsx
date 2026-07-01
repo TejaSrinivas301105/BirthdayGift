@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = import.meta.env.VITE_API_URL || `${window.location.protocol}//${window.location.hostname}:5000/api`;
+  const API_URL = import.meta.env.VITE_API_URL || 'https://birthdaygift-psa5.onrender.com/api';
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
         } catch (err) {
           console.warn('Backend offline, using fallback offline user profile');
           setIsAuthenticated(true);
-          setUser({ email: 'vts.srinivas2005@gmail.com' });
+          setUser({ email: 'asrithasai27@gmail.com' });
         }
       } else {
         setIsAuthenticated(false);
@@ -60,11 +60,11 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (err) {
       console.warn('Backend offline, using local mock auth');
-      if (email.toLowerCase() === 'vts.srinivas2005@gmail.com' && password === 'asritha123') {
+      if (email.toLowerCase() === 'asrithasai27@gmail.com' && password === 'asritha123') {
         const mockToken = 'mock-jwt-token-for-asritha';
         localStorage.setItem('token', mockToken);
         setToken(mockToken);
-        setUser({ email: 'vts.srinivas2005@gmail.com' });
+        setUser({ email: 'asrithasai27@gmail.com' });
         setIsAuthenticated(true);
         return { success: true };
       }
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }) => {
       return await res.json();
     } catch (err) {
       console.warn('Backend offline, mock OTP success');
-      if (email.toLowerCase() === 'vts.srinivas2005@gmail.com') {
+      if (email.toLowerCase() === 'asrithasai27@gmail.com') {
         return { success: true, message: 'OTP sent successfully (Offline Mode: Use any 6 digits)' };
       }
       return { success: false, message: 'Email not found.' };

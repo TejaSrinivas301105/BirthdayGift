@@ -5,7 +5,7 @@
  */
 const API_BASE =
   import.meta.env.VITE_API_URL ||
-  `${window.location.protocol}//${window.location.hostname}:5000/api`;
+  'https://birthdaygift-psa5.onrender.com/api';
 
 export const API_URLS = {
   auth: {

@@ -24,20 +24,28 @@ const timelineData = [
   },
   {
     step: 3,
+    title: "The Day We Became Friends",
+    description: "The day we played Holi on our campus — colours everywhere, laughter louder than ever, and a memory that painted our friendship in the brightest shades forever.",
+    image: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782930791/WhatsApp_Image_2026-07-02_at_12.01.49_AM_dtllci.jpg",
+    date: "The Magic Connection",
+    objectFit: "contain"
+  },
+  {
+    step: 4,
     title: "The Memories We Created",
     description: "Countless inside jokes, spontaneous calls, and shared moments of comfort. Each memory is a golden thread woven into the fabric of my happiest days.",
     image: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782819180/WhatsApp_Image_2026-06-30_at_4.58.58_PM_of2cmg.jpg",
     date: "Infinite Laughs"
   },
   {
-    step: 4,
+    step: 5,
     title: "The Smiles You Gave",
     description: "Whenever things got heavy, your smile and cheerful energy acted as a bright beacon of sunshine. Thank you for lighting up my world with your beautiful laugh.",
     image: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874003/WhatsApp_Image_2026-07-01_at_8.10.49_AM_2_svjoix.jpg",
     date: "Warmth & Joy"
   },
   {
-    step: 5,
+    step: 6,
     title: "The Moments We Will Keep Forever",
     description: "No matter where life takes us, or how busy we get, these precious moments of genuine friendship will remain locked in my heart, forever cherished and protected.",
     image: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782874005/WhatsApp_Image_2026-07-01_at_8.10.50_AM_zjp6ux.jpg",
@@ -104,6 +112,11 @@ const friendshipPhotos = [
     sub: "Cherished Forever",
     objectFit: "contain"
   },
+  {
+    src: "https://res.cloudinary.com/dyqeqadm5/image/upload/v1782930776/Friend_2_eqjdaw.jpg",
+    caption: "The Memories We Created",
+    sub: "Infinite Laughs"
+  }
 
 ];
 
@@ -365,7 +378,8 @@ const Journey = ({ onNext }) => {
                           const key = Object.keys(fallbacks)[item.step - 1];
                           e.target.src = fallbacks[key] || fallbacks['journey-day-we-met'];
                         }}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        style={{ objectFit: item.objectFit || 'cover', objectPosition: item.objectPosition || 'center' }}
+                        className="w-full h-full group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                       {/* Image overlay glow */}
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
