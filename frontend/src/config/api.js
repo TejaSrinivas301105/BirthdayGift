@@ -3,9 +3,7 @@
  * Uses VITE_API_URL from .env if available,
  * otherwise dynamically infers the backend URL from the current hostname.
  */
-const API_BASE =
-  import.meta.env.VITE_API_URL ||
-  'https://birthdaygift-psa5.onrender.com/api';
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export const API_URLS = {
   auth: {

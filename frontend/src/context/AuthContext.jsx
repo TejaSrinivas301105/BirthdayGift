@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'https://birthdaygift-psa5.onrender.com/api';
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const verifyToken = async () => {
