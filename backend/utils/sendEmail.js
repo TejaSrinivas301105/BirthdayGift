@@ -1,44 +1,40 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
 const sendEmail = async (options) => {
-  // If no email credentials, use mock
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+  // If no Resend API key, use mock
+  if (!process.env.RESEND_API_KEY) {
     console.log('\x1b[35m%s\x1b[0m', '📧 [EMAIL MOCK SERVICE]');
     console.log('\x1b[35m%s\x1b[0m', `To:      ${options.to}`);
     console.log('\x1b[35m%s\x1b[0m', `Subject: ${options.subject}`);
     
     const otp = extractOtpFromHtml(options.html);
-    console.log('\x1b[35m%s\x1b[0m', `OTP CODE: ${otp}`);
+    console.log('\x1b[35m%s\x1b[0m', `✨ OTP CODE: ${otp} ✨`);
     console.log('\x1b[35m%s\x1b[0m', '---------------------');
     return { mock: true, success: true };
   }
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'in-v3.mailjet.com',
-    port: parseInt(process.env.EMAIL_PORT) || 587,
-    secure: process.env.EMAIL_SECURE === 'true',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    connectionTimeout: 10000,
-    socketTimeout: 10000,
-  });
-
-  const mailOptions = {
-    from: process.env.EMAIL_FROM || `"Asritha's World" <${process.env.EMAIL_USER}>`,
-    to: options.to,
-    subject: options.subject,
-    text: options.text,
-    html: options.html,
-  };
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`Email sent via Mailjet: ${info.messageId}`);
-    return info;
+    const { data, error } = await resend.emails.send({
+      from: 'Asritha\'s World <noreply@asrithasworld.com>', // Replace with your actual domain
+      to: options.to,
+      subject: options.subject,
+      html: options.html,
+    });
+
+    if (error) {
+      console.error('Resend error:', error);
+      // Fallback to mock
+      const otp = extractOtpFromHtml(options.html);
+      console.log('\x1b[35m%s\x1b[0m', `📧 [RESEND FALLBACK] OTP for ${options.to}: ${otp}`);
+      return { mock: true, success: true, fallback: true };
+    }
+
+    console.log('📧 Email sent via Resend:', data.id);
+    return data;
   } catch (error) {
-    console.error('Mailjet send failed, falling back to mock:', error.message);
+    console.error('Resend send error:', error.message);
     const otp = extractOtpFromHtml(options.html);
     console.log('\x1b[35m%s\x1b[0m', `📧 [FALLBACK] OTP for ${options.to}: ${otp}`);
     return { mock: true, success: true, fallback: true };

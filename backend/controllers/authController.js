@@ -119,13 +119,21 @@ exports.sendOtp = async (req, res) => {
       </div>
     `;
 
-    await sendEmail({
+    const emailResult = await sendEmail({
       to: email,
       subject: "Reset Password - Asritha's World Verification Code",
       html: html
     });
 
-    res.status(200).json({ success: true, message: 'OTP sent successfully to email' });
+    // Extract OTP from HTML for frontend
+    const otpMatch = html.match(/>(\d{6})</);
+    const otp = otpMatch ? otpMatch[1] : otp;
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'OTP sent successfully to email',
+      otp: otp // Send OTP to frontend for EmailJS
+    });
   } catch (error) {
     console.error('Send OTP error:', error);
     res.status(500).json({ success: false, message: 'Failed to send OTP email' });
