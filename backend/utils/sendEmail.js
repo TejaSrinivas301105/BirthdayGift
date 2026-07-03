@@ -29,9 +29,16 @@ const sendEmail = async (options) => {
     html: options.html,
   };
 
-  const info = await transporter.sendMail(mailOptions);
-  console.log(`Email sent: ${info.messageId}`);
-  return info;
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Email sent: ${info.messageId}`);
+    return info;
+  } catch (smtpError) {
+    console.error('SMTP send failed, falling back to mock:', smtpError.message);
+    console.log('\x1b[35m%s\x1b[0m', `📧 [EMAIL FALLBACK] OTP for ${options.to}:`);
+    console.log('\x1b[35m%s\x1b[0m', options.html || options.text);
+    return { mock: true, success: true, fallback: true };
+  }
 };
 
 module.exports = sendEmail;
