@@ -24,7 +24,7 @@ const sendEmail = async (options) => {
   });
 
   const mailOptions = {
-    from: `"Asritha's World" <${process.env.EMAIL_USER}>`,
+    from: process.env.EMAIL_USER, // Just use the authenticated email
     to: options.to,
     subject: options.subject,
     text: options.text,
