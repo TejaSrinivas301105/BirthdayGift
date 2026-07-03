@@ -14,6 +14,9 @@ const feedbackRoutes = require('./routes/feedbackRoutes');
 
 const app = express();
 
+// Trust proxy for Render/Heroku environments
+app.set('trust proxy', 1);
+
 // ─── Security Headers (helmet) ────────────────────────────────────────────────
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allow Cloudinary images
