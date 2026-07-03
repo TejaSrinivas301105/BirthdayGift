@@ -1,46 +1,49 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
 const sendEmail = async (options) => {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+  // If no Resend API key, use mock
+  if (!process.env.RESEND_API_KEY) {
     console.log('\x1b[35m%s\x1b[0m', '📧 [EMAIL MOCK SERVICE]');
     console.log('\x1b[35m%s\x1b[0m', `To:      ${options.to}`);
     console.log('\x1b[35m%s\x1b[0m', `Subject: ${options.subject}`);
-    console.log('\x1b[35m%s\x1b[0m', `Message:`);
-    console.log('\x1b[35m%s\x1b[0m', options.html || options.text);
+    console.log('\x1b[35m%s\x1b[0m', `OTP Code: ${extractOtpFromHtml(options.html)}`);
     console.log('\x1b[35m%s\x1b[0m', '---------------------');
     return { mock: true, success: true };
   }
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.EMAIL_PORT) || 465,
-    secure: process.env.EMAIL_SECURE === 'true', // Convert string to boolean
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    connectionTimeout: 10000, // 10 seconds
-    socketTimeout: 10000,     // 10 seconds
-  });
-
-  const mailOptions = {
-    from: process.env.EMAIL_USER, // Just use the authenticated email
-    to: options.to,
-    subject: options.subject,
-    text: options.text,
-    html: options.html,
-  };
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`Email sent: ${info.messageId}`);
-    return info;
-  } catch (smtpError) {
-    console.error('SMTP send failed, falling back to mock:', smtpError.message);
-    console.log('\x1b[35m%s\x1b[0m', `📧 [EMAIL FALLBACK] OTP for ${options.to}:`);
-    console.log('\x1b[35m%s\x1b[0m', options.html || options.text);
+    const { data, error } = await resend.emails.send({
+      from: 'Asritha\'s World <onboarding@resend.dev>',
+      to: options.to,
+      subject: options.subject,
+      html: options.html,
+    });
+
+    if (error) {
+      console.error('Resend error:', error);
+      // Fallback to mock
+      console.log('\x1b[35m%s\x1b[0m', `📧 [RESEND FALLBACK] OTP for ${options.to}:`);
+      console.log('\x1b[35m%s\x1b[0m', `OTP: ${extractOtpFromHtml(options.html)}`);
+      return { mock: true, success: true, fallback: true };
+    }
+
+    console.log('Email sent via Resend:', data.id);
+    return data;
+  } catch (error) {
+    console.error('Email send error:', error.message);
+    console.log('\x1b[35m%s\x1b[0m', `📧 [FALLBACK] OTP for ${options.to}:`);
+    console.log('\x1b[35m%s\x1b[0m', `OTP: ${extractOtpFromHtml(options.html)}`);
     return { mock: true, success: true, fallback: true };
   }
 };
+
+// Helper to extract OTP from HTML
+function extractOtpFromHtml(html) {
+  if (!html) return 'N/A';
+  const match = html.match(/>(\d{6})</);
+  return match ? match[1] : 'N/A';
+}
 
 module.exports = sendEmail;
