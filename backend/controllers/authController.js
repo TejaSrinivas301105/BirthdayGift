@@ -127,12 +127,12 @@ exports.sendOtp = async (req, res) => {
 
     // Extract OTP from HTML for frontend
     const otpMatch = html.match(/>(\d{6})</);
-    const otp = otpMatch ? otpMatch[1] : otp;
+    const extractedOtp = otpMatch ? otpMatch[1] : otp;
 
     res.status(200).json({ 
       success: true, 
       message: 'OTP sent successfully to email',
-      otp: otp // Send OTP to frontend for EmailJS
+      otp: extractedOtp // Send OTP to frontend for EmailJS
     });
   } catch (error) {
     console.error('Send OTP error:', error);
