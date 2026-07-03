@@ -74,13 +74,59 @@ export const AuthProvider = ({ children }) => {
 
   const sendOtp = async (email) => {
     email = email.trim().toLowerCase();
+    
+    // First, get OTP from backend
     try {
       const res = await fetch(`${API_URL}/auth/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      return await res.json();
+      const data = await res.json();
+      
+      if (data.success) {
+        // Try to send email via EmailJS
+        try {
+          // Generate OTP from backend response or create mock
+          const otp = data.otp || Math.floor(100000 + Math.random() * 900000).toString();
+          
+          // EmailJS configuration from .env
+          const emailjsConfig = {
+            serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_joybpsh',
+            templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_otp',
+            userId: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'n7lRUFeyKGyusRYEG',
+            templateParams: {
+              to_email: email,
+              otp_code: otp,
+              subject: "Reset Password - Asritha's World Verification Code"
+            }
+          };
+          
+          // Send email via EmailJS if configured
+          if (window.emailjs && emailjsConfig.userId && emailjsConfig.userId !== 'YOUR_PUBLIC_KEY_HERE') {
+            try {
+              await window.emailjs.send(
+                emailjsConfig.serviceId,
+                emailjsConfig.templateId,
+                emailjsConfig.templateParams,
+                emailjsConfig.userId
+              );
+              console.log('📧 Email sent via EmailJS to:', email);
+            } catch (emailError) {
+              console.warn('EmailJS send failed:', emailError);
+              console.log('📧 OTP for', email, ':', otp);
+            }
+          } else {
+            console.log('📧 EmailJS not fully configured, OTP:', otp);
+          }
+        } catch (emailError) {
+          console.warn('EmailJS failed, OTP logged to console:', emailError);
+        }
+        
+        return data;
+      } else {
+        return data;
+      }
     } catch (err) {
       console.warn('Backend offline, mock OTP success');
       if (email.toLowerCase() === 'asrithasai27@gmail.com') {
